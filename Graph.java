@@ -68,9 +68,70 @@ class Graph {
         }
     }
 
+    private boolean detectCycleUDG(){
+        boolean[] visited = new boolean[vertices];
+        for(int i = 0; i< vertices; i++) {
+            if(!visited[i]){
+                if(cycleDetecterUDG(i, -1, visited)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean cycleDetecterUDG(int start, int par, boolean[] visited) {
+        visited[start] = true;
+
+        for(int neighbor: adjList.get(start)){
+            if(!visited[neighbor]){
+                 if(cycleDetecterUDG(neighbor, start, visited)){
+                    return true;
+                 }
+            } else if (neighbor != par){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean detectCycleDG(){
+        boolean[] visited = new boolean[vertices];
+        boolean[] recPath = new boolean[vertices];
+
+        for(int i = 0; i < vertices; i++){
+            if(!visited[i] ){
+                if(cycleDetecterDG(i, recPath, visited)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean cycleDetecterDG(int start, boolean[] recPath, boolean[] visited){
+        visited[start] = true;
+        recPath[start] =true;
+
+        for(int neighbor : adjList.get(start)){
+            if(!visited[neighbor]){
+                if(cycleDetecterDG(neighbor, recPath, visited)){
+                    return true;
+                }
+            } else if(recPath[neighbor]){
+                return true;
+            }
+        }
+        recPath[start] = false;
+        return false;
+    }
+
+
+
     public static void main(String[] args) {
         Graph g = new Graph(5);
-        g.addEdge(0, 1);
+
+        g.addEdge(0, 1);  
         g.addEdge(0, 4);
         g.addEdge(1, 2);
         g.addEdge(1, 3);
@@ -84,7 +145,12 @@ class Graph {
 
         System.out.println("\ndfs");
         g.dfs(3);
+        
+        System.out.println("\nCycle present: " + g.detectCycleUDG());
 
+        // To run Directed graph cycle detection funtion comment or delete distination to source addition step in addEdge Method
+
+        System.out.println("\nCycle present: " + g.detectCycleDG());
 
     }
 }
