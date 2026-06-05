@@ -16,9 +16,9 @@ class Graph {
         }
     }
 
-    public void addEdge(int source, int destication){
-        adjList.get(source).add(destication);
-        adjList.get(destication).add(source);
+    public void addEdge(int source, int destination){
+        adjList.get(source).add(destination);
+        adjList.get(destination).add(source);
     }
 
     public void printGraph() {
