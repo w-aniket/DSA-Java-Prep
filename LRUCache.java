@@ -7,32 +7,34 @@ class Solutions {
 
     Map<Integer, Integer> m = new HashMap<>();
     Deque<Integer> q = new LinkedList<>();
+    int capacity = 2;
 
-    void addFirst(int key, int val){
-        q.addFirst(key);
-        m.put(key, val);
-    }
-    void removeLast(){
-        m.remove(q.pollLast());
-    }
     void get(int key){
         if(!m.containsKey(key)) {
             System.out.println( -1 );
             return;
         }
 
-        if(q.peekLast() == key) {
-            removeLast();
-            q.addFirst(key);
-        }
+        q.remove(key);
+        q.addFirst(key);
 
         System.out.println( m.get(key));
     }
+
     void put(int key, int val){
-        if(q.size() >= 2) {
-            removeLast();
+        if(m.containsKey(key)) {
+            q.remove(key);
+            q.addFirst(key);
+            m.put(key, val);
+            return;
         }
-        addFirst(key, val);
+
+        if(q.size() >= capacity) {
+            m.remove(q.pollLast());
+        }
+
+        q.addFirst(key);
+        m.put(key, val);
     }
 }
 
